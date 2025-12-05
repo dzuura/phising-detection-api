@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.logging import setup_logging, get_logger
 from app.ml.model_loader import model_loader
 from app.ml.predictor import PhishingPredictor
-from app.services import url_analyzer
+from app.services import url_analyzer as url_analyzer_module
 from app.api.routes import detection, health, info
 from app import __version__
 
@@ -86,7 +86,7 @@ async def startup_event():
         predictor = PhishingPredictor(model)
         
         # Initialize URL analyzer with predictor
-        url_analyzer.url_analyzer = url_analyzer.URLAnalyzer(predictor)
+        url_analyzer_module.url_analyzer = url_analyzer_module.URLAnalyzer(predictor)
         logger.info("URL analyzer initialized")
         
         logger.info("Application startup complete")

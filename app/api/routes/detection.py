@@ -1,7 +1,7 @@
 """Detection endpoint"""
 from fastapi import APIRouter, HTTPException, status
 from app.models.schemas import URLPredictionRequest, PredictionResponse, ErrorResponse
-from app.services.url_analyzer import url_analyzer
+from app.services import url_analyzer as url_analyzer_module
 from app.services.stats_service import stats_service
 from app.core.logging import get_logger
 from datetime import datetime
@@ -38,7 +38,7 @@ async def predict_url(request: URLPredictionRequest):
         logger.info(f"Received prediction request")
         
         # Analyze URL
-        result = url_analyzer.analyze_url(request.url)
+        result = url_analyzer_module.url_analyzer.analyze_url(request.url)
         
         # Record statistics
         stats_service.record_analysis(
