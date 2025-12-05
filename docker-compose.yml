@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: phishing-detection-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/random_forest_model.pkl
+      - HOST=0.0.0.0
+      - PORT=8000
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+      - SCRAPING_TIMEOUT=5
+      - MAX_REDIRECTS=10
+    volumes:
+      - ../random_forest_model.pkl:/app/random_forest_model.pkl:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8000/api/v1/health')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

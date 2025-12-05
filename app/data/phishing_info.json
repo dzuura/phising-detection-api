@@ -1,0 +1,192 @@
+{
+  "en": {
+    "categories": [
+      {
+        "type": "Email Phishing",
+        "description": "Fraudulent emails that appear to come from reputable sources to steal sensitive information",
+        "indicators": [
+          "Urgent or threatening language",
+          "Requests for personal information",
+          "Suspicious sender email address",
+          "Poor grammar and spelling",
+          "Generic greetings"
+        ],
+        "examples": [
+          "Fake bank security alerts",
+          "IRS tax refund scams",
+          "Package delivery notifications"
+        ]
+      },
+      {
+        "type": "Spear Phishing",
+        "description": "Targeted phishing attacks aimed at specific individuals or organizations",
+        "indicators": [
+          "Personalized content",
+          "References to real events or people",
+          "Appears to come from known contacts",
+          "Requests for confidential business information"
+        ],
+        "examples": [
+          "CEO fraud targeting finance departments",
+          "Fake vendor invoices",
+          "Compromised colleague emails"
+        ]
+      },
+      {
+        "type": "Clone Phishing",
+        "description": "Legitimate emails are cloned and modified to contain malicious links or attachments",
+        "indicators": [
+          "Duplicate of previously received email",
+          "Slightly different sender address",
+          "Modified links or attachments",
+          "Requests to re-download or re-verify"
+        ],
+        "examples": [
+          "Resent invoices with malicious PDFs",
+          "Duplicate password reset emails",
+          "Cloned shipping notifications"
+        ]
+      },
+      {
+        "type": "Whaling",
+        "description": "Phishing attacks targeting high-profile individuals like executives",
+        "indicators": [
+          "Sophisticated and professional appearance",
+          "Business-related content",
+          "Urgent executive-level requests",
+          "Legal or compliance themes"
+        ],
+        "examples": [
+          "Fake subpoenas",
+          "Executive tax documents",
+          "Board meeting notifications"
+        ]
+      },
+      {
+        "type": "Smishing (SMS Phishing)",
+        "description": "Phishing attacks delivered via SMS text messages",
+        "indicators": [
+          "Shortened URLs",
+          "Urgent action required",
+          "Prize or refund notifications",
+          "Account verification requests"
+        ],
+        "examples": [
+          "Fake package delivery alerts",
+          "Bank security warnings",
+          "Prize winning notifications"
+        ]
+      },
+      {
+        "type": "Vishing (Voice Phishing)",
+        "description": "Phone-based phishing attacks using voice calls",
+        "indicators": [
+          "Unsolicited calls from 'official' sources",
+          "Pressure to act immediately",
+          "Requests for sensitive information over phone",
+          "Threats of account closure or legal action"
+        ],
+        "examples": [
+          "Fake IRS calls",
+          "Tech support scams",
+          "Bank fraud department impersonation"
+        ]
+      }
+    ]
+  },
+  "id": {
+    "categories": [
+      {
+        "type": "Email Phishing",
+        "description": "Email penipuan yang tampak berasal dari sumber terpercaya untuk mencuri informasi sensitif",
+        "indicators": [
+          "Bahasa yang mendesak atau mengancam",
+          "Permintaan informasi pribadi",
+          "Alamat email pengirim yang mencurigakan",
+          "Tata bahasa dan ejaan yang buruk",
+          "Sapaan yang umum/generik"
+        ],
+        "examples": [
+          "Peringatan keamanan bank palsu",
+          "Penipuan pengembalian pajak",
+          "Notifikasi pengiriman paket palsu"
+        ]
+      },
+      {
+        "type": "Spear Phishing",
+        "description": "Serangan phishing yang ditargetkan pada individu atau organisasi tertentu",
+        "indicators": [
+          "Konten yang dipersonalisasi",
+          "Referensi ke kejadian atau orang nyata",
+          "Tampak berasal dari kontak yang dikenal",
+          "Permintaan informasi bisnis rahasia"
+        ],
+        "examples": [
+          "Penipuan CEO yang menargetkan departemen keuangan",
+          "Faktur vendor palsu",
+          "Email rekan kerja yang disusupi"
+        ]
+      },
+      {
+        "type": "Clone Phishing",
+        "description": "Email legitimate yang dikloning dan dimodifikasi untuk berisi tautan atau lampiran berbahaya",
+        "indicators": [
+          "Duplikat email yang pernah diterima",
+          "Alamat pengirim sedikit berbeda",
+          "Tautan atau lampiran yang dimodifikasi",
+          "Permintaan untuk mengunduh ulang atau verifikasi ulang"
+        ],
+        "examples": [
+          "Faktur yang dikirim ulang dengan PDF berbahaya",
+          "Email reset password duplikat",
+          "Notifikasi pengiriman yang dikloning"
+        ]
+      },
+      {
+        "type": "Whaling",
+        "description": "Serangan phishing yang menargetkan individu profil tinggi seperti eksekutif",
+        "indicators": [
+          "Tampilan yang canggih dan profesional",
+          "Konten terkait bisnis",
+          "Permintaan mendesak tingkat eksekutif",
+          "Tema hukum atau kepatuhan"
+        ],
+        "examples": [
+          "Panggilan pengadilan palsu",
+          "Dokumen pajak eksekutif",
+          "Notifikasi rapat dewan"
+        ]
+      },
+      {
+        "type": "Smishing (SMS Phishing)",
+        "description": "Serangan phishing yang dikirim melalui pesan teks SMS",
+        "indicators": [
+          "URL yang dipersingkat",
+          "Tindakan mendesak diperlukan",
+          "Notifikasi hadiah atau pengembalian dana",
+          "Permintaan verifikasi akun"
+        ],
+        "examples": [
+          "Peringatan pengiriman paket palsu",
+          "Peringatan keamanan bank",
+          "Notifikasi pemenang hadiah"
+        ]
+      },
+      {
+        "type": "Vishing (Voice Phishing)",
+        "description": "Serangan phishing berbasis telepon menggunakan panggilan suara",
+        "indicators": [
+          "Panggilan tidak diminta dari sumber 'resmi'",
+          "Tekanan untuk bertindak segera",
+          "Permintaan informasi sensitif melalui telepon",
+          "Ancaman penutupan akun atau tindakan hukum"
+        ],
+        "examples": [
+          "Panggilan pajak palsu",
+          "Penipuan dukungan teknis",
+          "Peniruan departemen penipuan bank"
+        ]
+      }
+    ]
+  }
+}

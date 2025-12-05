@@ -1,0 +1,254 @@
+{
+  "en": {
+    "individual": [
+      {
+        "title": "Verify Before You Click",
+        "description": "Always verify the authenticity of links and emails before clicking",
+        "category": "non-technical",
+        "steps": [
+          "Hover over links to see the actual URL before clicking",
+          "Check the sender's email address carefully",
+          "Look for HTTPS and padlock icon in the address bar",
+          "Be suspicious of urgent or threatening messages",
+          "Contact the organization directly using official contact information"
+        ]
+      },
+      {
+        "title": "Use Strong Authentication",
+        "description": "Implement strong authentication methods to protect your accounts",
+        "category": "technical",
+        "steps": [
+          "Enable two-factor authentication (2FA) on all accounts",
+          "Use unique, complex passwords for each account",
+          "Consider using a password manager",
+          "Use biometric authentication when available",
+          "Regularly update your passwords"
+        ]
+      },
+      {
+        "title": "Keep Software Updated",
+        "description": "Maintain up-to-date software to protect against vulnerabilities",
+        "category": "technical",
+        "steps": [
+          "Enable automatic updates for your operating system",
+          "Keep your web browser updated",
+          "Update antivirus and security software regularly",
+          "Install security patches promptly",
+          "Remove outdated or unused software"
+        ]
+      },
+      {
+        "title": "Be Cautious with Personal Information",
+        "description": "Protect your personal information from phishing attempts",
+        "category": "non-technical",
+        "steps": [
+          "Never share passwords or PINs via email or phone",
+          "Be wary of requests for personal information",
+          "Limit information shared on social media",
+          "Shred sensitive documents before disposal",
+          "Monitor your financial statements regularly"
+        ]
+      },
+      {
+        "title": "Use Security Tools",
+        "description": "Leverage security tools to detect and prevent phishing",
+        "category": "technical",
+        "steps": [
+          "Install reputable antivirus software",
+          "Use email filters and spam blockers",
+          "Enable browser security features",
+          "Consider using a VPN for public Wi-Fi",
+          "Use phishing detection browser extensions"
+        ]
+      }
+    ],
+    "organization": [
+      {
+        "title": "Employee Security Training",
+        "description": "Educate employees about phishing threats and prevention",
+        "category": "non-technical",
+        "steps": [
+          "Conduct regular security awareness training",
+          "Run simulated phishing campaigns",
+          "Provide clear reporting procedures for suspicious emails",
+          "Share real-world phishing examples",
+          "Create a security-conscious culture"
+        ]
+      },
+      {
+        "title": "Implement Email Security",
+        "description": "Deploy technical controls to filter and block phishing emails",
+        "category": "technical",
+        "steps": [
+          "Implement SPF, DKIM, and DMARC email authentication",
+          "Use advanced email filtering and anti-phishing solutions",
+          "Enable link scanning and sandboxing",
+          "Block suspicious attachments and file types",
+          "Implement email encryption for sensitive communications"
+        ]
+      },
+      {
+        "title": "Access Control and Monitoring",
+        "description": "Control access and monitor for suspicious activities",
+        "category": "technical",
+        "steps": [
+          "Implement principle of least privilege",
+          "Use multi-factor authentication organization-wide",
+          "Monitor and log access to sensitive systems",
+          "Implement anomaly detection systems",
+          "Regularly review access permissions"
+        ]
+      },
+      {
+        "title": "Incident Response Plan",
+        "description": "Prepare for and respond to phishing incidents effectively",
+        "category": "non-technical",
+        "steps": [
+          "Develop a comprehensive incident response plan",
+          "Establish a security incident response team",
+          "Define clear escalation procedures",
+          "Conduct regular incident response drills",
+          "Document and learn from security incidents"
+        ]
+      },
+      {
+        "title": "Network Security Controls",
+        "description": "Implement network-level security measures",
+        "category": "technical",
+        "steps": [
+          "Deploy web filtering and DNS security",
+          "Implement network segmentation",
+          "Use intrusion detection and prevention systems",
+          "Enable firewall rules to block malicious traffic",
+          "Monitor network traffic for anomalies"
+        ]
+      }
+    ]
+  },
+  "id": {
+    "individual": [
+      {
+        "title": "Verifikasi Sebelum Mengklik",
+        "description": "Selalu verifikasi keaslian tautan dan email sebelum mengklik",
+        "category": "non-technical",
+        "steps": [
+          "Arahkan kursor ke tautan untuk melihat URL sebenarnya sebelum mengklik",
+          "Periksa alamat email pengirim dengan cermat",
+          "Cari HTTPS dan ikon gembok di bilah alamat",
+          "Curigai pesan yang mendesak atau mengancam",
+          "Hubungi organisasi secara langsung menggunakan informasi kontak resmi"
+        ]
+      },
+      {
+        "title": "Gunakan Autentikasi Kuat",
+        "description": "Terapkan metode autentikasi yang kuat untuk melindungi akun Anda",
+        "category": "technical",
+        "steps": [
+          "Aktifkan autentikasi dua faktor (2FA) di semua akun",
+          "Gunakan kata sandi yang unik dan kompleks untuk setiap akun",
+          "Pertimbangkan menggunakan pengelola kata sandi",
+          "Gunakan autentikasi biometrik jika tersedia",
+          "Perbarui kata sandi Anda secara berkala"
+        ]
+      },
+      {
+        "title": "Perbarui Perangkat Lunak",
+        "description": "Pertahankan perangkat lunak yang terbaru untuk melindungi dari kerentanan",
+        "category": "technical",
+        "steps": [
+          "Aktifkan pembaruan otomatis untuk sistem operasi Anda",
+          "Perbarui browser web Anda",
+          "Perbarui antivirus dan perangkat lunak keamanan secara berkala",
+          "Instal patch keamanan dengan segera",
+          "Hapus perangkat lunak yang sudah usang atau tidak digunakan"
+        ]
+      },
+      {
+        "title": "Berhati-hati dengan Informasi Pribadi",
+        "description": "Lindungi informasi pribadi Anda dari upaya phishing",
+        "category": "non-technical",
+        "steps": [
+          "Jangan pernah membagikan kata sandi atau PIN melalui email atau telepon",
+          "Waspada terhadap permintaan informasi pribadi",
+          "Batasi informasi yang dibagikan di media sosial",
+          "Hancurkan dokumen sensitif sebelum dibuang",
+          "Pantau laporan keuangan Anda secara berkala"
+        ]
+      },
+      {
+        "title": "Gunakan Alat Keamanan",
+        "description": "Manfaatkan alat keamanan untuk mendeteksi dan mencegah phishing",
+        "category": "technical",
+        "steps": [
+          "Instal perangkat lunak antivirus yang terpercaya",
+          "Gunakan filter email dan pemblokir spam",
+          "Aktifkan fitur keamanan browser",
+          "Pertimbangkan menggunakan VPN untuk Wi-Fi publik",
+          "Gunakan ekstensi browser deteksi phishing"
+        ]
+      }
+    ],
+    "organization": [
+      {
+        "title": "Pelatihan Keamanan Karyawan",
+        "description": "Edukasi karyawan tentang ancaman phishing dan pencegahan",
+        "category": "non-technical",
+        "steps": [
+          "Lakukan pelatihan kesadaran keamanan secara berkala",
+          "Jalankan kampanye phishing simulasi",
+          "Berikan prosedur pelaporan yang jelas untuk email mencurigakan",
+          "Bagikan contoh phishing dunia nyata",
+          "Ciptakan budaya sadar keamanan"
+        ]
+      },
+      {
+        "title": "Implementasi Keamanan Email",
+        "description": "Terapkan kontrol teknis untuk menyaring dan memblokir email phishing",
+        "category": "technical",
+        "steps": [
+          "Implementasikan autentikasi email SPF, DKIM, dan DMARC",
+          "Gunakan solusi penyaringan email dan anti-phishing tingkat lanjut",
+          "Aktifkan pemindaian tautan dan sandboxing",
+          "Blokir lampiran dan jenis file yang mencurigakan",
+          "Implementasikan enkripsi email untuk komunikasi sensitif"
+        ]
+      },
+      {
+        "title": "Kontrol Akses dan Pemantauan",
+        "description": "Kontrol akses dan pantau aktivitas mencurigakan",
+        "category": "technical",
+        "steps": [
+          "Implementasikan prinsip hak akses minimum",
+          "Gunakan autentikasi multi-faktor di seluruh organisasi",
+          "Pantau dan catat akses ke sistem sensitif",
+          "Implementasikan sistem deteksi anomali",
+          "Tinjau izin akses secara berkala"
+        ]
+      },
+      {
+        "title": "Rencana Respons Insiden",
+        "description": "Persiapkan dan tanggapi insiden phishing secara efektif",
+        "category": "non-technical",
+        "steps": [
+          "Kembangkan rencana respons insiden yang komprehensif",
+          "Bentuk tim respons insiden keamanan",
+          "Tentukan prosedur eskalasi yang jelas",
+          "Lakukan latihan respons insiden secara berkala",
+          "Dokumentasikan dan pelajari dari insiden keamanan"
+        ]
+      },
+      {
+        "title": "Kontrol Keamanan Jaringan",
+        "description": "Implementasikan langkah-langkah keamanan tingkat jaringan",
+        "category": "technical",
+        "steps": [
+          "Terapkan penyaringan web dan keamanan DNS",
+          "Implementasikan segmentasi jaringan",
+          "Gunakan sistem deteksi dan pencegahan intrusi",
+          "Aktifkan aturan firewall untuk memblokir lalu lintas berbahaya",
+          "Pantau lalu lintas jaringan untuk anomali"
+        ]
+      }
+    ]
+  }
+}
