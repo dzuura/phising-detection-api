@@ -19,7 +19,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
 
 # Copy model file
-COPY ../random_forest_model.pkl ./random_forest_model.pkl
+COPY models/ ./models/
+
+# Copy TLD list
+COPY tld_list.json ./tld_list.json
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app

@@ -126,8 +126,9 @@ class HealthCheckResponse(BaseModel):
     version: str = Field(..., description="API version")
     timestamp: str = Field(..., description="Current timestamp")
     
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "protected_namespaces": (),  # Disable protected namespace warnings
+        "json_schema_extra": {
             "example": {
                 "status": "healthy",
                 "model_loaded": True,
@@ -135,6 +136,7 @@ class HealthCheckResponse(BaseModel):
                 "timestamp": "2024-12-05T10:30:00Z"
             }
         }
+    }
 
 
 class StatsResponse(BaseModel):

@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
     
     # Model Configuration
-    model_path: str = Field(default="../random_forest_model.pkl", env="MODEL_PATH")
+    model_path: str = Field(default="./models/model.pkl", env="MODEL_PATH")
     
     # Server Configuration
     host: str = Field(default="0.0.0.0", env="HOST")
@@ -46,9 +46,11 @@ class Settings(BaseSettings):
         """Parse allowed origins from comma-separated string"""
         return [origin.strip() for origin in self.allowed_origins.split(",")]
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    model_config = {
+        "protected_namespaces": (),  # Disable protected namespace warnings
+        "env_file": ".env",
+        "case_sensitive": False
+    }
 
 
 # Global settings instance

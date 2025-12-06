@@ -1,0 +1,9 @@
+# Ignore model files (too large for git)
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Keep this directory
+!.gitignore

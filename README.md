@@ -1,6 +1,6 @@
 # Phishing Detection API
 
-Backend API untuk deteksi URL phishing menggunakan machine learning Random Forest.
+API Backend untuk deteksi URL phishing menggunakan machine learning Random Forest.
 
 ## Features
 
@@ -10,7 +10,7 @@ Backend API untuk deteksi URL phishing menggunakan machine learning Random Fores
 - 📚 **Educational Content**: Informasi tentang jenis-jenis phishing dan strategi mitigasi
 - 🌍 **Multi-language**: Dukungan Bahasa Indonesia dan English
 - 📈 **Statistics**: Tracking statistik analisis dalam session
-- 🔒 **CORS Support**: Siap diintegrasikan dengan frontend Next.js
+- 🔒 **CORS Support**: Siap diintegrasikan dengan frontend
 
 ## Tech Stack
 
@@ -24,7 +24,7 @@ Backend API untuk deteksi URL phishing menggunakan machine learning Random Fores
 ### Prerequisites
 
 - Python 3.10+
-- Model file: `random_forest_model.pkl` (harus ada di root directory)
+- Model file: `model.pkl` (harus ada di `models/` directory)
 
 ### Setup
 
@@ -49,7 +49,7 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-4. Copy dan configure environment variables:
+4. Copy dan konfigurasi environment variables:
 
 ```bash
 cp .env.example .env
@@ -59,28 +59,41 @@ cp .env.example .env
 5. Pastikan model file ada:
 
 ```bash
-# Model harus ada di: ../random_forest_model.pkl
+# Model harus ada di: models/model.pkl
 # Atau sesuaikan MODEL_PATH di .env
 ```
 
 ## Running the Application
 
-### Development Mode
+### Quick Start
 
-```bash
+**Manual:**
+```powershell
+# Development mode
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Production mode
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
 ```
 
-### Production Mode
-
+**Linux/Mac (Makefile):**
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+make dev          # Development mode
+make prod         # Production mode
+make help         # Lihat semua commands
 ```
 
 ### Using Docker
 
 ```bash
-docker-compose up -d
+# Quick start
+make docker-u
+
+# Logs
+make docker-logs
+
+# Stop
+make docker-down
 ```
 
 ## API Documentation
@@ -88,7 +101,26 @@ docker-compose up -d
 Setelah aplikasi berjalan, akses dokumentasi interaktif di:
 
 - **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Postman**: https://documenter.getpostman.com/view/39730752/2sB3dPSW95
+
+## Available Commands
+
+Berikut semua commands yang tersedia via Makefile:
+
+| Command | Deskripsi |
+|---------|-----------|
+| `make dev` | Run development server dengan auto-reload |
+| `make prod` | Run production server dengan 4 workers |
+| `make install` | Install dependencies dari requirements.txt |
+| `make install-dev` | Install semua dependencies termasuk dev |
+| `make test` | Run tests dengan pytest |
+| `make test-cov` | Run tests dengan coverage report |
+| `make clean` | Hapus cache files (__pycache__, .pyc, dll) |
+| `make docker-up` | Start aplikasi dengan Docker Compose |
+| `make docker-down` | Stop Docker containers |
+| `make docker-logs` | Lihat Docker logs (follow mode) |
+| `make docker-build` | Build Docker image |
+| `make help` | Tampilkan semua available commands |
 
 ## API Endpoints
 
@@ -222,18 +254,18 @@ Get strategi mitigasi phishing.
 
 ## Environment Variables
 
-| Variable           | Description                            | Default                      |
-| ------------------ | -------------------------------------- | ---------------------------- |
-| `MODEL_PATH`       | Path to model file                     | `../random_forest_model.pkl` |
-| `HOST`             | Server host                            | `0.0.0.0`                    |
-| `PORT`             | Server port                            | `8000`                       |
-| `ALLOWED_ORIGINS`  | CORS allowed origins (comma-separated) | `http://localhost:3000`      |
-| `SCRAPING_TIMEOUT` | Timeout for web scraping (seconds)     | `5`                          |
-| `MAX_REDIRECTS`    | Maximum redirects to follow            | `10`                         |
-| `LOG_LEVEL`        | Logging level                          | `INFO`                       |
-| `LOG_FORMAT`       | Log format (`json` or `text`)          | `json`                       |
+| Variable           | Deskripsi                                  | Default                |
+| ------------------ | ------------------------------------------ | ---------------------- |
+| `MODEL_PATH`       | Path ke file model                         | `./models/model.pkl`   |
+| `HOST`             | Server host                                | `0.0.0.0`              |
+| `PORT`             | Server port                                | `8000`                 |
+| `ALLOWED_ORIGINS`  | CORS allowed origins (comma-separated)     | `http://localhost:3000`|
+| `SCRAPING_TIMEOUT` | Timeout untuk web scraping (detik)         | `5`                    |
+| `MAX_REDIRECTS`    | Maksimum redirects yang diikuti            | `10`                   |
+| `LOG_LEVEL`        | Level logging                              | `INFO`                 |
+| `LOG_FORMAT`       | Format log (`json` atau `text`)            | `json`                 |
 
-## Project Structure
+## Struktur Proyek
 
 ```
 phising-detection-api/

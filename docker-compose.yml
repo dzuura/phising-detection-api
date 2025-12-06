@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MODEL_PATH=/app/random_forest_model.pkl
+      - MODEL_PATH=/app/models/model.pkl
       - HOST=0.0.0.0
       - PORT=8000
       - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
@@ -18,7 +18,7 @@ services:
       - SCRAPING_TIMEOUT=5
       - MAX_REDIRECTS=10
     volumes:
-      - ../random_forest_model.pkl:/app/random_forest_model.pkl:ro
+      - ./models:/app/models:ro
     restart: unless-stopped
     healthcheck:
       test:
