@@ -70,13 +70,24 @@ class FeatureExtractor:
         # Get TLD
         tld = domain.split('.')[-1] if '.' in domain else ''
         
-        # Calculate URL similarity index (simplified version)
+        # Calculate features
         url_similarity = self._calculate_url_similarity(url, domain)
-        
-        # Calculate character continuation rate
         char_continuation = self._calculate_char_continuation_rate(domain)
+        char_prob = self._calculate_char_prob(url)
+        ratios = self._calculate_ratios(url)
         
         features = {
+            # Model Features (PascalCase)
+            "URLSimilarityIndex": url_similarity,
+            "CharContinuationRate": char_continuation,
+            "URLCharProb": char_prob,
+            "LetterRatioInURL": ratios["letter_ratio"],
+            "DegitRatioInURL": ratios["digit_ratio"],
+            "NoOfOtherSpecialCharsInURL": ratios["special_char_count"],
+            "SpacialCharRatioInURL": ratios["special_char_ratio"],
+            "IsHTTPS": 1 if parsed.scheme == 'https' else 0,
+            
+            # Legacy/Display Features (snake_case)
             "url_similarity_index": url_similarity,
             "char_continuation_rate": char_continuation,
             "tld": tld,
@@ -113,10 +124,67 @@ class FeatureExtractor:
                 continuations += 1
         
         return continuations / (len(text) - 1) if len(text) > 1 else 0.0
+
+    def _calculate_char_prob(self, url: str) -> float:
+        """Calculate simplified character probability score"""
+        # Simplified implementation: Ratio of common chars to uncommon chars
+        common_chars = "abcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;="
+        count = sum(1 for c in url.lower() if c in common_chars)
+        return count / len(url) if url else 0.0
+
+    def _calculate_ratios(self, url: str) -> Dict[str, float]:
+        """Calculate various ratios for URL"""
+        if not url:
+            return {
+                "letter_ratio": 0.0,
+                "digit_ratio": 0.0,
+                "special_char_ratio": 0.0,
+                "special_char_count": 0
+            }
+            
+        digits = sum(c.isdigit() for c in url)
+        letters = sum(c.isalpha() for c in url)
+        special = len(url) - digits - letters
+        
+        length = len(url)
+        return {
+            "letter_ratio": letters / length,
+            "digit_ratio": digits / length,
+            "special_char_ratio": special / length,
+            "special_char_count": special
+        }
     
+    
+    def _calculate_similarity(self, str1: str, str2: str) -> float:
+        """Calculate similarity between two strings"""
+        if not str1 or not str2:
+            return 0.0
+            
+        from difflib import SequenceMatcher
+        return SequenceMatcher(None, str1.lower(), str2.lower()).ratio() * 100
+        
     def _extract_content_features(self, url: str) -> Dict[str, Any]:
         """Extract features from web page content"""
+        # Default features with PascalCase names matching model
+        # AND snake_case for API response compatibility
         default_features = {
+            # Model Features (PascalCase)
+            "HasTitle": 0,
+            "DomainTitleMatchScore": 0.0,
+            "URLTitleMatchScore": 0.0,
+            "HasFavicon": 0,
+            "Robots": 0,
+            "IsResponsive": 0,
+            "HasDescription": 0,
+            "HasSocialNet": 0,
+            "HasSubmitButton": 0,
+            "HasHiddenFields": 0,
+            "Pay": 0,
+            "HasCopyrightInfo": 0,
+            "NoOfJS": 0,
+            "NoOfSelfRef": 0,
+            
+            # API Response Features (snake_case)
             "url_is_live": 0,
             "has_title": 0,
             "has_favicon": 0,
@@ -128,6 +196,8 @@ class FeatureExtractor:
             "no_of_self_ref": 0,
             "has_copyright_info": 0,
             "pay": 0,
+            
+            "tld": url.split('.')[-1] if '.' in url else ""
         }
         
         try:
@@ -139,16 +209,24 @@ class FeatureExtractor:
             )
             
             if response.status_code == 200:
+                default_features["IsResponsive"] = 1
                 default_features["url_is_live"] = 1
                 
                 soup = BeautifulSoup(response.content, 'html.parser')
                 
                 # Check for title
                 if soup.find('title'):
+                    default_features["HasTitle"] = 1
                     default_features["has_title"] = 1
+                    # Calculate title match scores
+                    title = soup.find('title').string
+                    if title:
+                        default_features["DomainTitleMatchScore"] = self._calculate_similarity(url, title)
+                        default_features["URLTitleMatchScore"] = self._calculate_similarity(url, title)
                 
                 # Check for favicon
                 if soup.find('link', rel='icon') or soup.find('link', rel='shortcut icon'):
+                    default_features["HasFavicon"] = 1
                     default_features["has_favicon"] = 1
                 
                 # Check for social media links
@@ -156,23 +234,28 @@ class FeatureExtractor:
                 links = soup.find_all('a', href=True)
                 for link in links:
                     if any(pattern in link['href'].lower() for pattern in social_patterns):
+                        default_features["HasSocialNet"] = 1
                         default_features["has_social_net"] = 1
                         break
                 
                 # Check for submit buttons
                 if soup.find('input', type='submit') or soup.find('button', type='submit'):
+                    default_features["HasSubmitButton"] = 1
                     default_features["has_submit_button"] = 1
                 
                 # Check for hidden fields
                 if soup.find('input', type='hidden'):
+                    default_features["HasHiddenFields"] = 1
                     default_features["has_hidden_fields"] = 1
                 
                 # Check for meta description
                 if soup.find('meta', attrs={'name': 'description'}):
+                    default_features["HasDescription"] = 1
                     default_features["has_description"] = 1
                 
                 # Count JavaScript files
                 scripts = soup.find_all('script', src=True)
+                default_features["NoOfJS"] = len(scripts)
                 default_features["no_of_js"] = len(scripts)
                 
                 # Count self-references
@@ -182,17 +265,24 @@ class FeatureExtractor:
                 for link in links:
                     if domain in link.get('href', ''):
                         self_refs += 1
+                default_features["NoOfSelfRef"] = self_refs
                 default_features["no_of_self_ref"] = self_refs
                 
                 # Check for copyright info
                 text_content = soup.get_text().lower()
                 if 'copyright' in text_content or '©' in text_content:
+                    default_features["HasCopyrightInfo"] = 1
                     default_features["has_copyright_info"] = 1
                 
                 # Check for payment-related keywords
                 payment_keywords = ['payment', 'credit card', 'paypal', 'checkout', 'billing']
                 if any(keyword in text_content for keyword in payment_keywords):
+                    default_features["Pay"] = 1
                     default_features["pay"] = 1
+                    
+                # Check for robots (simplified)
+                if soup.find('meta', attrs={'name': 'robots'}):
+                    default_features["Robots"] = 1
             
             return default_features
             

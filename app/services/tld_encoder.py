@@ -45,6 +45,13 @@ class TLDEncoder:
         return encoding
     
     def get_feature_names(self) -> List[str]:
+        """
+        Get list of TLD feature names matching training data
+        Format: TLD_{tld_name}
+        """
+        return [f"TLD_{tld}" for tld in self.known_tlds]
+    
+    def get_feature_names(self) -> List[str]:
         """Get feature names for TLD encoding"""
         return [f"TLD_{tld}" for tld in self.known_tlds]
 
