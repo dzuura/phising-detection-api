@@ -34,7 +34,7 @@ class NetworkInfo(BaseModel):
     redirect_chain: List[str] = Field(default_factory=list, description="Chain of redirects")
     final_url: str = Field(..., description="Final URL after redirects")
     ip_address: Optional[str] = Field(None, description="IP address of the server")
-    location: Dict[str, Optional[str]] = Field(
+    location: Dict[str, Any] = Field(
         default_factory=dict,
         description="Geographic location of the server"
     )
@@ -42,17 +42,34 @@ class NetworkInfo(BaseModel):
 
 class Features(BaseModel):
     """Extracted features from URL"""
+    # URL Structure features
     url_similarity_index: Optional[float] = None
     char_continuation_rate: Optional[float] = None
-    tld: Optional[str] = None
+    url_char_prob: Optional[float] = None
+    letter_ratio: Optional[float] = None
+    digit_ratio: Optional[float] = None
+    special_chars: Optional[int] = None
+    special_char_ratio: Optional[float] = None
+    is_https: Optional[int] = None
     no_of_dot_in_url: Optional[int] = None
     no_of_dash_in_url: Optional[int] = None
     url_is_live: Optional[int] = None
+    # Content features
     has_title: Optional[int] = None
+    domain_title_match: Optional[float] = None
+    url_title_match: Optional[float] = None
     has_favicon: Optional[int] = None
+    has_robots: Optional[int] = None
+    is_responsive: Optional[int] = None
+    has_description: Optional[int] = None
     has_social_net: Optional[int] = None
-    has_copyright_info: Optional[int] = None
+    has_submit_button: Optional[int] = None
+    has_hidden_fields: Optional[int] = None
+    has_payment: Optional[int] = None
+    has_copyright: Optional[int] = None
     no_of_js: Optional[int] = None
+    no_of_self_ref: Optional[int] = None
+    tld: Optional[str] = None
 
 
 class PredictionResponse(BaseModel):
