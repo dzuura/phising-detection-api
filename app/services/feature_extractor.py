@@ -24,6 +24,24 @@ class FeatureExtractor:
         self.final_url = None
         self.ip_address = None
         self.location = {}
+        self.top_domains = self._import_openpagerank()
+
+    def _import_openpagerank(self):
+        """ Import top domains from openpagerank CSV file """
+        try:
+            with open('./top10milliondomains.csv', 'r') as f:
+                top_domains = []
+                f.readline()  # Skip header
+                for line in f:
+                    domain = line.strip().split(',')[1].strip('"')  # Assuming domain is in second column
+                    openPageRank = line.strip().split(',')[2].strip('"')  # Assuming openPageRank is in third column
+                    if(domain and openPageRank and float(openPageRank) > 6.5):
+                        top_domains.append(domain)
+                logger.info(f"Imported {len(top_domains)} top domains from openpagerank")
+                return top_domains
+        except Exception as e:
+            logger.error(f"Error reading top domains file: {str(e)}")
+            return []
     
     def extract_all_features(self, url: str) -> Dict[str, Any]:
         """
@@ -95,7 +113,7 @@ class FeatureExtractor:
             features['NoOfSelfRef'] = 0
         
         return features
-    
+
     def _fetch_html(self, url: str) -> None:
         """Fetch HTML content from URL and track redirects"""
         try:
@@ -177,6 +195,26 @@ class FeatureExtractor:
     
     # ========== URL STRUCTURE FEATURES ==========
     
+    def _calculate_usi(self, src: str, tar: str) -> float:
+        """
+        Calculate URL Similarity Index (USI) between two strings.
+        """
+
+        n = max(len(src), len(tar))
+
+        # Pad shorter string so both have equal length
+        src = src.ljust(n)
+        tar = tar.ljust(n)
+
+        usi = 0.0
+
+        for i in range(n):
+            if src[i] == tar[i]:
+                weight = (50 / n) + (100 * (n - i)) / (n * (n + 1))
+                usi += weight
+
+        return round(usi, 4)
+    
     def _calculate_url_similarity_index(self, url: str) -> float:
         """
         Calculate URL similarity index
@@ -184,31 +222,46 @@ class FeatureExtractor:
         """
         # Remove protocol and www
         clean_url = re.sub(r'^https?://(www\.)?', '', url)
-        
-        # Count character frequencies
-        char_freq = {}
-        for char in clean_url.lower():
-            if char.isalnum():
-                char_freq[char] = char_freq.get(char, 0) + 1
-        
-        if not char_freq:
+
+        # compare with top 1000 domains from openpagerank
+        try:
+            max_similarity = 0.0
+            similar_domain = ''
+            for domain in self.top_domains:
+                similarity = self._calculate_usi(clean_url, domain)
+                if similarity > max_similarity:
+                    max_similarity = similarity
+                    similar_domain = domain
+            logger.info(f"Most similar domain to {clean_url} is {similar_domain} with similarity {max_similarity}")
+            return round(max_similarity, 2)
+        except Exception as e:
+            logger.error(f"Error reading top domains file: {str(e)}")
             return 0.0
         
-        # Calculate entropy-like measure
-        total_chars = sum(char_freq.values())
-        unique_chars = len(char_freq)
+        # # Count character frequencies
+        # char_freq = {}
+        # for char in clean_url.lower():
+        #     if char.isalnum():
+        #         char_freq[char] = char_freq.get(char, 0) + 1
         
-        # Similarity index: higher = more uniform distribution
-        if unique_chars == 0:
-            return 0.0
+        # if not char_freq:
+        #     return 0.0
         
-        avg_freq = total_chars / unique_chars
-        variance = sum((freq - avg_freq) ** 2 for freq in char_freq.values()) / unique_chars
+        # # Calculate entropy-like measure
+        # total_chars = sum(char_freq.values())
+        # unique_chars = len(char_freq)
         
-        # Normalize to 0-100 range
-        similarity = 100 / (1 + variance / avg_freq) if avg_freq > 0 else 0
+        # # Similarity index: higher = more uniform distribution
+        # if unique_chars == 0:
+        #     return 0.0
         
-        return round(similarity, 2)
+        # avg_freq = total_chars / unique_chars
+        # variance = sum((freq - avg_freq) ** 2 for freq in char_freq.values()) / unique_chars
+        
+        # # Normalize to 0-100 range
+        # similarity = 100 / (1 + variance / avg_freq) if avg_freq > 0 else 0
+        
+        # return round(similarity, 2)
     
     def _calculate_char_continuation_rate(self, url: str) -> float:
         """
@@ -320,28 +373,51 @@ class FeatureExtractor:
         return 1 if title and title.string and len(title.string.strip()) > 0 else 0
     
     def _calculate_domain_title_match(self, domain: str) -> float:
-        """Calculate similarity between domain and title"""
+        """
+        Optimized domain-title match score.
+        Works for ALL domains (.com, .co.id, .org, etc)
+        """
+
         if not self.soup:
             return 0.0
-        
-        title = self.soup.find('title')
-        if not title or not title.string:
+
+        title_tag = self.soup.find('title')
+        if not title_tag or not title_tag.string:
             return 0.0
-        
-        title_text = title.string.lower().strip()
-        domain_clean = domain.replace('www.', '').replace('.com', '').replace('.', ' ')
-        
-        # Simple word matching
-        domain_words = set(domain_clean.split())
-        title_words = set(title_text.split())
-        
-        if not domain_words or not title_words:
+
+        title_text = title_tag.string.lower()
+
+        # 1️⃣ Normalize title
+        title_words = set(re.findall(r"[a-z0-9]+", title_text))
+
+        # 2️⃣ Normalize domain (remove protocol if any)
+        domain = domain.lower()
+        domain = re.sub(r"^www\.", "", domain)
+
+        # 3️⃣ Split domain parts
+        domain_parts = domain.split(".")
+
+        # 4️⃣ Remove common TLDs
+        common_tlds = {
+            "com", "net", "org", "co", "id", "gov", "edu", "ac",
+            "io", "info", "biz", "xyz", "my", "site", "online"
+        }
+
+        domain_keywords = set()
+        for part in domain_parts:
+            if part not in common_tlds and len(part) > 1:
+                tokens = re.findall(r"[a-z0-9]+", part)
+                domain_keywords.update(tokens)
+
+        if not domain_keywords:
             return 0.0
-        
-        matches = len(domain_words & title_words)
-        score = matches / len(domain_words) if domain_words else 0.0
-        
-        return round(score, 2)
+
+        # 5️⃣ Calculate overlap
+        matched = domain_keywords & title_words
+        score = len(matched) / len(domain_keywords)
+
+        logger.info(f"Domain-title match for {domain}: matched {matched}, score {score}")
+        return round(score, 3)
     
     def _calculate_url_title_match(self, url: str) -> float:
         """Calculate similarity between URL and title"""
@@ -456,19 +532,27 @@ class FeatureExtractor:
     
     def _has_copyright(self) -> int:
         """Check if page has copyright information"""
-        if not self.soup or not self.html_content:
+        if not self.soup:
             return 0
         
-        text = self.html_content.lower()
+        footer = self.soup.find('footer')
+        if footer:
+            text = footer.get_text().lower()
+            if 'copyright' in text or '©' in text:
+                return 1
+        return 0
+        
+        # text = self.html_content.lower()
         
         # Check for copyright symbols and text
-        copyright_patterns = ['©', '&copy;', 'copyright', '(c)']
+
+        # copyright_patterns = ['©', '&copy;', 'copyright', '(c)']
         
-        for pattern in copyright_patterns:
-            if pattern in text:
-                return 1
+        # for pattern in copyright_patterns:
+        #     if pattern in text:
+        #         return 1
         
-        return 0
+        # return 0
     
     def _count_js_files(self) -> int:
         """Count number of JavaScript files"""
