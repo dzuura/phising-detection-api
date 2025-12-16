@@ -50,3 +50,5 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+top10milliondomains.csv
