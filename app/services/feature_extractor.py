@@ -24,6 +24,7 @@ class FeatureExtractor:
         self.final_url = None
         self.ip_address = None
         self.location = {}
+        self._last_is_safe_match = 0
         self.top_domains = self._import_openpagerank()
 
     def _import_openpagerank(self):
@@ -66,6 +67,7 @@ class FeatureExtractor:
         
         # Extract URL structure features (don't need HTML)
         features['URLSimilarityIndex'] = self._calculate_url_similarity_index(url)
+        features['IsSafeMatch'] = getattr(self, '_last_is_safe_match', 0)
         features['CharContinuationRate'] = self._calculate_char_continuation_rate(url)
         features['URLCharProb'] = self._calculate_url_char_prob(url)
         features['LetterRatioInURL'] = self._calculate_letter_ratio(url)
@@ -220,8 +222,16 @@ class FeatureExtractor:
         Calculate URL similarity index
         Based on character frequency distribution
         """
-        # Remove protocol and www
-        clean_url = re.sub(r'^https?://(www\.)?', '', url)
+        # Extract domain only for comparison
+        try:
+            parsed = urlparse(url)
+            clean_url = parsed.netloc
+            # Remove www prefix if present
+            clean_url = re.sub(r'^www\.', '', clean_url)
+        except Exception:
+            # Fallback to regex if urlparse fails (unlikely)
+            clean_url = re.sub(r'^https?://(www\.)?', '', url)
+            clean_url = clean_url.split('/')[0]
 
         # compare with top 1000 domains from openpagerank
         try:
@@ -232,10 +242,20 @@ class FeatureExtractor:
                 if similarity > max_similarity:
                     max_similarity = similarity
                     similar_domain = domain
+            
             logger.info(f"Most similar domain to {clean_url} is {similar_domain} with similarity {max_similarity}")
+            
+            # Check if this is a safe match (exact match or subdomain)
+            # e.g. clean_url="facebook.com" similar="facebook.com" -> Safe
+            # e.g. clean_url="m.facebook.com" similar="facebook.com" -> Safe
+            # e.g. clean_url="face-book.com" similar="facebook.com" -> Unsafe
+            is_safe = (clean_url == similar_domain) or clean_url.endswith('.' + similar_domain)
+            self._last_is_safe_match = 1 if is_safe else 0
+            
             return round(max_similarity, 2)
         except Exception as e:
             logger.error(f"Error reading top domains file: {str(e)}")
+            self._last_is_safe_match = 0
             return 0.0
         
         # # Count character frequencies

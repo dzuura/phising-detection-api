@@ -123,29 +123,29 @@ class URLAnalyzer:
         
         # Check URL structure - CRITICAL indicators
         if features.get("URLSimilarityIndex", 100) < 40:
-            indicators["low_similarity"] = "⚠️ URL has unusual character distribution (possible obfuscation)"
+            indicators["low_similarity"] = "URL has unusual character distribution (possible obfuscation)"
         
         if features.get("CharContinuationRate", 0) > 0.25:
-            indicators["high_continuation"] = "⚠️ URL has many repeated characters"
+            indicators["high_continuation"] = "URL has many repeated characters"
         
         if features.get("DegitRatioInURL", 0) > 0.3:
-            indicators["high_digits"] = "⚠️ URL contains excessive digits (common in phishing)"
+            indicators["high_digits"] = "URL contains excessive digits (common in phishing)"
         
         if features.get("SpacialCharRatioInURL", 0) > 0.25:
-            indicators["high_special_chars"] = "⚠️ URL contains many special characters"
+            indicators["high_special_chars"] = "URL contains many special characters"
         
         if features.get("NoOfDotInURL", 0) > 5:
-            indicators["excessive_dots"] = "⚠️ Excessive dots in URL (possible subdomain spoofing)"
+            indicators["excessive_dots"] = "Excessive dots in URL (possible subdomain spoofing)"
         
         if features.get("NoOfDashInURL", 0) > 3:
-            indicators["excessive_dashes"] = "⚠️ Excessive dashes in URL"
+            indicators["excessive_dashes"] = "Excessive dashes in URL"
         
         # Check security features - IMPORTANT
         if not features.get("IsHTTPS"):
-            indicators["no_https"] = "🔒 Website does not use HTTPS (insecure)"
+            indicators["no_https"] = "Website does not use HTTPS (insecure)"
         
         if not features.get("URLIsLive"):
-            indicators["url_dead"] = "💀 URL is not accessible (may be taken down)"
+            indicators["url_dead"] = "URL is not accessible (may be taken down)"
         
         # Check missing trust indicators
         if not features.get("HasFavicon"):
@@ -162,13 +162,13 @@ class URLAnalyzer:
         
         # Check suspicious content - HIGH RISK
         if features.get("HasHiddenFields"):
-            indicators["hidden_fields"] = "🚨 Contains hidden form fields (data theft risk)"
+            indicators["hidden_fields"] = "Contains hidden form fields (data theft risk)"
         
         if features.get("Pay") and not features.get("HasSocialNet"):
-            indicators["payment_no_social"] = "💳 Payment content without social media presence (suspicious)"
+            indicators["payment_no_social"] = "Payment content without social media presence (suspicious)"
         
         if features.get("HasSubmitButton") and not features.get("IsHTTPS"):
-            indicators["form_no_https"] = "🚨 Form submission without HTTPS (credential theft risk)"
+            indicators["form_no_https"] = "Form submission without HTTPS (credential theft risk)"
         
         # Check trust signals
         if not features.get("Robots"):
@@ -186,7 +186,7 @@ class URLAnalyzer:
         # Check redirect chain
         redirect_count = len(self.feature_extractor.redirect_chain) - 1
         if redirect_count > 2:
-            indicators["multiple_redirects"] = f"⚠️ Multiple redirects detected ({redirect_count} hops)"
+            indicators["multiple_redirects"] = f"Multiple redirects detected ({redirect_count} hops)"
         
         return indicators
 
