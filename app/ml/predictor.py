@@ -46,7 +46,22 @@ class PhishingPredictor:
             confidence = float(max(probabilities))
             is_phishing = bool(prediction == 0)  # Assuming 0 = phishing, 1 = legitimate
             
-            risk_level = self._determine_risk_level(confidence, is_phishing)
+            # --- Heuristic Override ---
+            # If high similarity to a top domain BUT not that domain (Impersonation)
+            # USI is usually > 40 for close matches. Let's use 30 to be safe.
+            usi = float(features.get("URLSimilarityIndex", 0))
+            is_safe_match = bool(features.get("IsSafeMatch", 0))
+            
+            if usi > 30.0 and not is_safe_match:
+                logger.warning(f"Heuristic Override: High Similarity ({usi}) + Unsafe Match -> PHISHING")
+                is_phishing = True
+                confidence = 0.99
+                risk_level = "high"
+                # Adjust probabilities to reflect this certainty
+                probabilities = [0.99, 0.01]
+            else:
+                risk_level = self._determine_risk_level(confidence, is_phishing)
+            # --------------------------
             
             result = {
                 "is_phishing": is_phishing,
