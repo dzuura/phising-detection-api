@@ -52,16 +52,11 @@ class PhishingPredictor:
             usi = float(features.get("URLSimilarityIndex", 0))
             is_safe_match = bool(features.get("IsSafeMatch", 0))
             
+            risk_level = self._determine_risk_level(confidence, is_phishing)
+            
             if usi > 30.0 and not is_safe_match:
                 logger.warning(f"Heuristic Override: High Similarity ({usi}) + Unsafe Match -> PHISHING")
                 is_phishing = True
-                confidence = 0.99
-                risk_level = "high"
-                # Adjust probabilities to reflect this certainty
-                probabilities = [0.99, 0.01]
-            else:
-                risk_level = self._determine_risk_level(confidence, is_phishing)
-            # --------------------------
             
             result = {
                 "is_phishing": is_phishing,
