@@ -36,7 +36,7 @@ class FeatureExtractor:
                 for line in f:
                     domain = line.strip().split(',')[1].strip('"')  # Assuming domain is in second column
                     openPageRank = line.strip().split(',')[2].strip('"')  # Assuming openPageRank is in third column
-                    if(domain and openPageRank and float(openPageRank) > 6.5):
+                    if(domain and openPageRank and float(openPageRank) > 4):
                         top_domains.append(domain)
                 logger.info(f"Imported {len(top_domains)} top domains from openpagerank")
                 return top_domains
@@ -407,17 +407,17 @@ class FeatureExtractor:
 
         title_text = title_tag.string.lower()
 
-        # 1️⃣ Normalize title
+        # Normalize title
         title_words = set(re.findall(r"[a-z0-9]+", title_text))
 
-        # 2️⃣ Normalize domain (remove protocol if any)
+        # Normalize domain (remove protocol if any)
         domain = domain.lower()
         domain = re.sub(r"^www\.", "", domain)
 
-        # 3️⃣ Split domain parts
+        # Split domain parts
         domain_parts = domain.split(".")
 
-        # 4️⃣ Remove common TLDs
+        # Remove common TLDs
         common_tlds = {
             "com", "net", "org", "co", "id", "gov", "edu", "ac",
             "io", "info", "biz", "xyz", "my", "site", "online"
@@ -432,7 +432,7 @@ class FeatureExtractor:
         if not domain_keywords:
             return 0.0
 
-        # 5️⃣ Calculate overlap
+        # Calculate overlap
         matched = domain_keywords & title_words
         score = len(matched) / len(domain_keywords)
 
